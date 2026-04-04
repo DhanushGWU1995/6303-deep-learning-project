@@ -1,0 +1,16 @@
+# Dataset — too large for GitHub (70,000 images)
+  data/raw/train/
+  data/raw/test/
+  data/raw/validation/
+  data/processed/
+
+  # Model checkpoints
+  models/checkpoints/
+  *.pth
+  *.pt
+
+  # Python
+  __pycache__/
+  *.pyc
+  .pythonlibs/
+  
