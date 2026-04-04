@@ -51,6 +51,7 @@ Final-Project-GroupX/
 ### Dataset
 - **Primary:** UNBC-McMaster Shoulder Pain Expression Archive
 - **Fallback:** CK+ dataset (Kaggle) with pain-proxy labeling
+- https://www.kaggle.com/datasets/dollyprajapati182/balanced-image-fer-dataset-7575-rgb/data
 
 ### Pain Classification
 | Class | PSPI Score |
