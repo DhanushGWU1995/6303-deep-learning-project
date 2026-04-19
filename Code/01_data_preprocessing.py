@@ -20,23 +20,31 @@ Option B — Pre-organised pain folder (CK+, custom):
     moderate/
     severe/
 
-Option C — FER2013 / Balanced RGB FER (Kaggle: dollyprajapati182/balanced-image-fer-dataset-7575-rgb
-                                          OR:  sayakbera/fer-2013-7-emotions-uniform-dataset):
+Option C — AffectNet Relabeled Balanced (RECOMMENDED):
+  Kaggle: viktormodroczky/facial-affect-data-relabeled
+  Download the dataset, then move the emotion folders so the layout is:
+
   data/raw/
     train/
-      angry/ disgust/ fear/ happy/ neutral/ sad/ surprise/
+      anger/ contempt/ disgust/ fear/ happy/ neutral/ sad/ surprise/
     test/
-      angry/ disgust/ fear/ happy/ neutral/ sad/ surprise/
-    validation/   (optional, pooled with the above)
+      anger/ contempt/ disgust/ fear/ happy/ neutral/ sad/ surprise/
+
+  After downloading and extracting, run:
+    mv data_relabeled_balanced_1x/train  data/raw/train
+    mv data_relabeled_balanced_1x/test   data/raw/test
+
+  Why this dataset:
+    - Based on AffectNet — real-world color photographs (not lab grayscale)
+    - Genuine RGB images: each channel carries distinct color information
+    - Pre-balanced across 8 emotion classes; available in 1x / 2x / 3x sizes
+    - Contempt class included → mapped to mild pain
 
   Emotion → Pain mapping applied automatically:
-    neutral, happy  → no_pain
-    sad             → mild
-    fear            → moderate
+    neutral, happy          → no_pain
+    sad, contempt           → mild
+    fear                    → moderate
     angry, disgust, surprise → severe
-
-  Preferred: the 75x75 RGB dataset — native 3-channel input works
-  directly with ImageNet-pretrained VGG16 / ResNet50 / EfficientNet.
 
 The script auto-detects which layout is present.
 """
@@ -87,6 +95,10 @@ FER_TO_PAIN = {
     "disgusted":    "severe",
     "surprise":     "severe",
     "surprised":    "severe",
+
+    # Mild Pain — unilateral facial tension (sneer-like)
+    "contempt":     "mild",
+    "contemptuous": "mild",
 }
 
 FER_EMOTION_LABELS = set(FER_TO_PAIN.keys())
@@ -108,11 +120,53 @@ def pspi_to_class(score: float) -> str:
         return "severe"
 
 
-def detect_and_crop_face(image_path: str, target_size: int = IMG_SIZE):
+def apply_mouth_emphasis(rgb_array: np.ndarray, mouth_boost: float = 1.35,
+                          upper_dampen: float = 0.80,
+                          mouth_start_frac: float = 0.50) -> np.ndarray:
+    """
+    Apply a smooth spatial weight mask to amplify the lower face (mouth/chin)
+    and slightly dampen the upper face (forehead/eyes).
+
+    The mask uses a sigmoid transition centered at ``mouth_start_frac`` of the
+    image height (default 50 % = mid-face, just below the nose bridge).
+
+    Args:
+        rgb_array:        HxWx3 uint8 ndarray in RGB order.
+        mouth_boost:      Multiplier for the lower-face region (>1 = brighter).
+        upper_dampen:     Multiplier for the upper-face region (<1 = darker).
+        mouth_start_frac: Fractional row where the transition midpoint sits.
+
+    Returns:
+        HxWx3 uint8 ndarray with mouth region emphasised.
+    """
+    h, w = rgb_array.shape[:2]
+    # Build per-row weight: sigmoid from upper_dampen → mouth_boost
+    rows = np.arange(h, dtype=np.float32)
+    midpoint = mouth_start_frac * h
+    steepness = 10.0 / h          # controls how sharp the transition is
+    sigmoid = 1.0 / (1.0 + np.exp(-steepness * (rows - midpoint)))
+    # Map sigmoid [0,1] → [upper_dampen, mouth_boost]
+    row_weights = upper_dampen + (mouth_boost - upper_dampen) * sigmoid  # (H,)
+
+    # Broadcast to (H, W, 3) and apply
+    mask = row_weights[:, np.newaxis, np.newaxis]          # (H, 1, 1)
+    emphasised = np.clip(rgb_array.astype(np.float32) * mask, 0, 255)
+    return emphasised.astype(np.uint8)
+
+
+def detect_and_crop_face(image_path: str, target_size: int = IMG_SIZE,
+                          mouth_emphasis: bool = True):
     """
     Read an image (RGB or grayscale), detect the face region, crop and resize.
     Optimised for the 75x75 RGB dataset; gracefully handles grayscale too.
     Always returns a 3-channel (RGB) PIL image at target_size x target_size.
+
+    When ``mouth_emphasis=True`` (default) a smooth spatial weight mask is
+    applied after cropping so the lower-face / mouth region receives ~1.35×
+    brightness relative to the upper face.  This biases downstream gradient
+    flow (and Grad-CAM heat maps) toward pain-relevant Action Units
+    (AU20 lip-corner pull, AU17 chin raise, AU25 lip-part) rather than the
+    brow/nose region that unweighted models tend to latch on to.
     """
     img = cv2.imread(image_path, cv2.IMREAD_COLOR)   # always load as BGR
     if img is None:
@@ -138,7 +192,12 @@ def detect_and_crop_face(image_path: str, target_size: int = IMG_SIZE):
         face = img[y:y + h, x:x + w]
         rgb = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
 
-    return Image.fromarray(rgb).resize((target_size, target_size))
+    rgb_resized = np.array(Image.fromarray(rgb).resize((target_size, target_size)))
+
+    if mouth_emphasis:
+        rgb_resized = apply_mouth_emphasis(rgb_resized)
+
+    return Image.fromarray(rgb_resized)
 
 
 # ---------------------------------------------------------------------------
