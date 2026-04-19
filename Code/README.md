@@ -23,30 +23,41 @@ pip install -r requirements.txt
 
 ## Dataset Setup
 
-### Option A — Pre-organised (easiest)
-Organize your dataset as:
+### Recommended — AffectNet Relabeled Balanced (Genuine RGB color images)
+
+Download from Kaggle:
 ```
-data/raw/
-  no_pain/    ← PSPI score = 0
-  mild/       ← PSPI score 1-3
-  moderate/   ← PSPI score 4-7
-  severe/     ← PSPI score 8+
+https://www.kaggle.com/datasets/viktormodroczky/facial-affect-data-relabeled
 ```
 
-### Option B — UNBC-McMaster
-After requesting access from https://www.pitt.edu/~emotion/um-spread.htm:
+After extracting, move the folders so your structure looks like this:
 ```
 data/raw/
-  Subject001/
-    Subject001_frame001.png
-    ...
-  pspi_scores.csv    ← columns: subject, frame, pspi
+  train/
+    anger/   contempt/   disgust/   fear/
+    happy/   neutral/    sad/       surprise/
+  test/
+    anger/   contempt/   disgust/   fear/
+    happy/   neutral/    sad/       surprise/
 ```
 
-### Option C — CK+ (Kaggle, quick start)
-Download from Kaggle, map emotion labels to pain levels:
-- Angry, Disgust, Fear → mild/moderate pain proxy
-- Neutral, Happy → no_pain
+Quick setup commands (run from `Code/`):
+```bash
+kaggle datasets download -d viktormodroczky/facial-affect-data-relabeled
+unzip facial-affect-data-relabeled.zip
+mv data_relabeled_balanced_1x/train data/raw/train
+mv data_relabeled_balanced_1x/test  data/raw/test
+```
+
+Use `data_relabeled_balanced_1x` for standard size, `2x` or `3x` for larger training sets.
+
+**Emotion → Pain mapping applied automatically:**
+| Emotion | Pain Level |
+|---|---|
+| neutral, happy | No Pain |
+| sad, contempt | Mild |
+| fear | Moderate |
+| angry, disgust, surprise | Severe |
 
 ## Running the Demo App
 
