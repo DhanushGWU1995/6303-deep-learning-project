@@ -1,0 +1,16 @@
+Model: efficientnet
+Accuracy  : 79.47%
+F1 Score  : 78.99%
+Precision : 79.07%
+Recall    : 79.03%
+
+              precision    recall  f1-score   support
+
+        mild     0.7959    0.7348    0.7641      1380
+    moderate     0.7921    0.7886    0.7904       686
+     no_pain     0.7546    0.8137    0.7831      1251
+      severe     0.8200    0.8242    0.8221      2133
+
+    accuracy                         0.7947      5450
+   macro avg     0.7907    0.7903    0.7899      5450
+weighted avg     0.7954    0.7947    0.7945      5450
