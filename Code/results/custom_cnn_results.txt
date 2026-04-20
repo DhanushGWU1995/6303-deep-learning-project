@@ -1,16 +1,16 @@
 Model: custom_cnn
-Accuracy  : 36.77%
-F1 Score  : 19.45%
-Precision : 15.15%
-Recall    : 28.06%
+Accuracy  : 39.10%
+F1 Score  : 30.23%
+Precision : 34.24%
+Recall    : 35.36%
 
               precision    recall  f1-score   support
 
-        mild     0.0000    0.0000    0.0000      1380
-    moderate     0.2069    0.2697    0.2342       686
-     no_pain     0.0000    0.0000    0.0000      1251
-      severe     0.3993    0.8528    0.5439      2133
+        mild     0.3235    0.0080    0.0156      1380
+    moderate     0.2157    0.2478    0.2307       686
+     no_pain     0.3684    0.5907    0.4538      1251
+      severe     0.4619    0.5677    0.5094      2133
 
-    accuracy                         0.3677      5450
-   macro avg     0.1515    0.2806    0.1945      5450
-weighted avg     0.1823    0.3677    0.2423      5450
+    accuracy                         0.3910      5450
+   macro avg     0.3424    0.3536    0.3023      5450
+weighted avg     0.3744    0.3910    0.3365      5450
