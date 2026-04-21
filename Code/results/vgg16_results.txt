@@ -1,0 +1,16 @@
+Model: vgg16
+Accuracy  : 79.58%
+F1 Score  : 79.28%
+Precision : 79.21%
+Recall    : 79.41%
+
+              precision    recall  f1-score   support
+
+        mild     0.7343    0.7812    0.7570      1380
+    moderate     0.8089    0.7959    0.8024       686
+     no_pain     0.7785    0.7922    0.7853      1251
+      severe     0.8466    0.8073    0.8265      2133
+
+    accuracy                         0.7958      5450
+   macro avg     0.7921    0.7941    0.7928      5450
+weighted avg     0.7978    0.7958    0.7964      5450
