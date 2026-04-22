@@ -66,9 +66,10 @@ def main():
     val_ds   = datasets.ImageFolder(os.path.join(PROCESSED_DATA_DIR, "val"),   val_tf)
     test_ds  = datasets.ImageFolder(os.path.join(PROCESSED_DATA_DIR, "test"),  val_tf)
 
-    train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True,  num_workers=2)
-    val_loader   = DataLoader(val_ds,   batch_size=BATCH_SIZE, shuffle=False, num_workers=2)
-    test_loader  = DataLoader(test_ds,  batch_size=BATCH_SIZE, shuffle=False, num_workers=2)
+    
+    train_loader = DataLoader(train_ds, batch_size=BATCH_SIZE, shuffle=True, num_workers=max(4, os.cpu_count() // 2), pin_memory=True, persistent_workers=True)
+    val_loader = DataLoader(val_ds, batch_size=BATCH_SIZE, shuffle=False, num_workers=max(4, os.cpu_count() // 2), pin_memory=True, persistent_workers=True)
+    test_loader = DataLoader(test_ds, batch_size=BATCH_SIZE, shuffle=False, num_workers=max(4, os.cpu_count() // 2), pin_memory=True, persistent_workers=True)
 
     # Compute class weights to handle imbalance (severe >> mild/moderate)
     targets = [label for _, label in train_ds.samples]
@@ -111,7 +112,7 @@ def main():
         scheduler2, DEVICE, "resnet50",
         MODEL_PATHS["resnet50"], NUM_EPOCHS, EARLY_STOPPING_PATIENCE
     )
-    print(f"\n[Done] Best Val Acc: {best_acc:.2f}%")
+    print(f"\n[Done] Best Val F1: {best_acc:.2f}%")
 
     model.load_state_dict(torch.load(MODEL_PATHS["resnet50"], map_location=DEVICE))
     evaluate_model(model, test_loader, DEVICE, "resnet50")

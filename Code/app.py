@@ -29,11 +29,7 @@ from gradcam import (GradCAM, get_target_layer, overlay_heatmap,
 
 # Hugging Face Hub model repo — weights are downloaded automatically
 # when running as a deployed Space and local .pth files are absent.
-# A Space variable can override this at deploy time.
-HF_MODEL_REPO = os.getenv(
-    "HF_MODEL_REPO",
-    "DhanushGWU1995/facial-pain-detection-models",
-)
+HF_MODEL_REPO = "DhanushGWU1995/facial-pain-detection-models"
 HF_MODEL_FILES = {
     "custom_cnn":    "custom_cnn_best.pth",
     "vgg16":         "vgg16_best.pth",
@@ -276,10 +272,8 @@ def main():
     model, model_key = load_model(model_choice)
     if model is None:
         st.error(
-            f"Model weights not found locally at `{MODEL_PATHS[model_key]}` "
-            f"or in Hugging Face repo `{HF_MODEL_REPO}` "
-            f"(expected file: `{HF_MODEL_FILES[model_key]}`). "
-            "Upload the checkpoint with `08_upload_to_hf.py` or add the file manually."
+            f"Model weights not found at `{MODEL_PATHS[model_key]}`. "
+            "Please train the model first by running the training scripts."
         )
         return
 
