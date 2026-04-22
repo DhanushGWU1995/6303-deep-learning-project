@@ -92,14 +92,15 @@ def get_target_layer(model_name: str, model: nn.Module) -> nn.Module:
     spatial-attention conv is hooked — this ensures Grad-CAM activations
     reflect the learned mouth-region weighting.
     """
+
     if model_name == "custom_cnn":
         return model.features[-1].block[-3]
     elif model_name == "vgg16":
         return model.features[-1]
     elif model_name == "resnet50":
-        return model.layer4[-1]
+        return model.layer4[-1].conv3
     elif model_name == "efficientnet":
-        return model.features[-1]
+        return model.features[-1][0]
     elif model_name == "vgg16_mouth":
         # Hook the CBAM spatial-attention conv (after backbone features)
         return model.cbam.spatial_attn.conv

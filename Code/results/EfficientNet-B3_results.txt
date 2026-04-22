@@ -1,4 +1,4 @@
-Model: efficientnet
+Model: EfficientNet-B3
 Accuracy  : 78.11%
 F1 Score  : 77.64%
 Precision : 77.30%

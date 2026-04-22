@@ -40,6 +40,7 @@ SPACE_FILES = [
     "app.py",
     "config.py",
     "gradcam.py",
+    "utils.py",
     "train_custom_cnn.py",
     "09_finetune_mouth_attention.py",
     "10_train_dual_input.py",

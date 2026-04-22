@@ -1,4 +1,4 @@
-Model: vgg16
+Model: VGG-16
 Accuracy  : 79.25%
 F1 Score  : 78.80%
 Precision : 78.71%
