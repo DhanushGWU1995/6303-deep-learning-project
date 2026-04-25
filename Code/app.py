@@ -237,6 +237,59 @@ def main():
         "only. It is not a certified medical device and must not be used for clinical diagnosis "
         "or treatment decisions without validation by qualified healthcare professionals."
     )
+    st.header("📘 Project Overview")
+
+    st.subheader("Introduction")
+    st.write(
+        "This project uses deep learning to classify facial pain severity from facial images. "
+        "The system predicts four classes: no pain, mild pain, moderate pain, and severe pain."
+    )
+
+    st.subheader("Motivation")
+    st.write(
+        "Pain is typically measured through self-report, but this is not always possible. "
+        "Facial pain detection can provide a non-invasive signal for ICU patients, post-surgical recovery, "
+        "and non-verbal populations such as infants or dementia patients."
+    )
+
+    st.subheader("Dataset")
+    st.write(
+        "This project uses a relabeled facial affect dataset from Kaggle, which contains facial expressions "
+        "associated with different emotional and pain-related states. The dataset was adapted to better reflect "
+        "pain intensity levels rather than generic emotions."
+    )
+
+    st.write(
+        "Images are organized into four pain severity categories:"
+    )
+
+    st.markdown(
+        """
+        - **No Pain** — neutral or relaxed facial expressions  
+        - **Mild Pain** — subtle discomfort (slight brow lowering, minor tension)  
+        - **Moderate Pain** — noticeable facial strain (tightened eyes, raised cheeks)  
+        - **Severe Pain** — intense expressions (grimacing, strong muscle activation)
+        """
+    )
+
+    st.write(
+        "The dataset is split into training, validation, and test sets to ensure proper model evaluation. "
+        "For this demo, a smaller subset of the validation set is used to enable fast, interactive evaluation "
+        "within the web application."
+    )
+
+    st.write(
+        "Although the dataset originates from facial affect (emotion) recognition, it has been relabeled to align "
+        "with pain-related facial cues, making it suitable for exploring automated pain detection systems."
+    )
+
+    st.subheader("Preprocessing")
+    st.write(
+        "Images are processed using face detection, cropping, resizing, tensor conversion, "
+        "and normalization using ImageNet statistics before being passed into the model."
+    )
+
+    st.divider()
 
     with st.sidebar:
         st.header("⚙️ Settings")
