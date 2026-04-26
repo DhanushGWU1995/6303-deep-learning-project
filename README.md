@@ -119,6 +119,7 @@ Built with **Streamlit** — enables real-time pain detection via webcam:
 - Grad-CAM heatmap showing which facial regions (brow furrow, eye squeeze, mouth) drove the prediction
 - Dual-input model shows two side-by-side branch heatmaps (full face + mouth crop)
 - Downloadable JSON report
+- https://huggingface.co/spaces/DhanushGWU1995/facial-pain-detection
 
 ## Quick Start
 
