@@ -158,3 +158,17 @@ streamlit run app.py
 - Accuracy, Macro F1-Score, Precision, Recall
 - Confusion Matrix per model
 - Grad-CAM qualitative interpretability
+
+## End to End Deployment Details:
+- https://github.com/DhanushGWU1995/Final-Project-Group2/blob/main/DEPLOYMENT.md
+
+## Future Research Improvements:
+- https://github.com/DhanushGWU1995/Final-Project-Group2/tree/main/GAN_POC
+
+## Final Project Reports & Presentation:
+- https://github.com/DhanushGWU1995/Final-Project-Group2/tree/main/Final-Group-Project-Report
+- https://github.com/DhanushGWU1995/Final-Project-Group2/tree/main/Final-Individual-Report
+- https://github.com/DhanushGWU1995/Final-Project-Group2/tree/main/Final-Group-Presentation
+
+## Literature & Peer Review, Citations:
+- https://github.com/DhanushGWU1995/Final-Project-Group2/blob/main/Group-Proposal/Literature%20Review.pdf
